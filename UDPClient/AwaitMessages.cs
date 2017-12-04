@@ -19,7 +19,9 @@ namespace UDPClient
 
         public void WaitForMessages()
         {
+            //
             //Declare udp client variable on port 8085
+            //
             UdpClient udpClient = new UdpClient();
 
             running = true;

@@ -27,7 +27,7 @@ namespace UDPClient
         public Form1()
         {
             InitializeComponent();
-            AwaitingMessage(udpClient);
+            //AwaitingMessage(udpClient);
         }
 
         private void SendButton_Click(object sender, EventArgs e)
@@ -94,7 +94,7 @@ namespace UDPClient
             }
 
 
-
+            AwaitingMessage(udpClient);
 
         }
 
@@ -104,6 +104,7 @@ namespace UDPClient
             form2 = this;
             //AwaitMessages messageThread = new AwaitMessages();
             messageThread.form = form2;
+            messageThread.serverIP = addressTextbox.Text;
             ThreadStart s = messageThread.WaitForMessages;
             thread1 = new Thread(s);
             thread1.Start();

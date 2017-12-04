@@ -125,16 +125,31 @@ namespace UDPClient
             
         }
 
-        private void Form1_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void DisconnectButton_Click(object sender, EventArgs e)
         {
             thread1.Abort();
             messageThread.running = false;
         }
 
-        private void DisconnectButton_Click(object sender, EventArgs e)
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             thread1.Abort();
             messageThread.running = false;
+            Application.ExitThread();
+            Environment.Exit(0);
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            thread1.Abort();
+            messageThread.running = false;
+            Application.ExitThread();
+            Environment.Exit(0);
         }
     }
 }

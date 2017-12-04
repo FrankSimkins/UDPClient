@@ -22,7 +22,7 @@ namespace UDPClient
             //
             //Declare udp client variable on port 8085
             //
-            UdpClient udpClient = new UdpClient();
+            UdpClient udpClient = new UdpClient(0);
 
             running = true;
             while (running)

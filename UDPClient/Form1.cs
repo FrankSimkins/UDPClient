@@ -23,6 +23,7 @@ namespace UDPClient
         static IPEndPoint udpServer;
         static AwaitMessages messageThread = new AwaitMessages();
         static Thread thread1;
+        static int lastMessage;
 
         public Form1()
         {
@@ -33,7 +34,7 @@ namespace UDPClient
         private void SendButton_Click(object sender, EventArgs e)
         {
             //When the send button is clicked, check what we ant to send and change convert it to a byte array
-            string messageToSend = UserNameTextbox.Text + ": " + MessageTextbox.Text;
+            string messageToSend = $"receive:0:{UserNameTextbox.Text}:{MessageTextbox.Text}";
             byte[] byteMessage = Encoding.ASCII.GetBytes(messageToSend);
             int portInt = 8080;
 
@@ -56,12 +57,14 @@ namespace UDPClient
         private void ConnectButton_Click(object sender, EventArgs e)
         {
             //Declare local variables
+            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             string userName = UserNameTextbox.Text;
             string serverIP = addressTextbox.Text;
             string port = PortTextbox.Text;
             bool parsedIP;
             bool parsedPort;
             Int32 portInt;
+
 
             //Parse IP to make sure they have entered something valid
             parsedIP = IPAddress.TryParse(serverIP, out serverAddress);
@@ -78,9 +81,20 @@ namespace UDPClient
                 IPEndPoint udpServer = new IPEndPoint(serverAddress, portInt);
                 byte[] byteMessage = Encoding.ASCII.GetBytes($"{userName}:");
 
+                socket.SendTo(Encoding.ASCII.GetBytes($"connect:0:{userName}"), udpServer);
+                var portVar = socket.LocalEndPoint.ToString().Split(':')[1];
+
                 try
                 {
-                    udpClient.Send(byteMessage, byteMessage.Length, udpServer);
+                    //udpClient.Send(byteMessage, byteMessage.Length, udpServer);
+
+                    IPEndPoint groupEP = new IPEndPoint(IPAddress.Any, int.Parse(port));
+                    byte[] buffer = new byte[1024];
+                    socket.Receive(buffer);
+
+                    string receivedBytes = Encoding.ASCII.GetString(buffer);
+                    int.TryParse(receivedBytes, out lastMessage);
+
                     messageThread.running = true;
 
                 }
@@ -105,6 +119,8 @@ namespace UDPClient
             //AwaitMessages messageThread = new AwaitMessages();
             messageThread.form = form2;
             messageThread.serverIP = addressTextbox.Text;
+            messageThread.lastMessage = lastMessage;
+            messageThread.userName = UserNameTextbox.Text;
             ThreadStart s = messageThread.WaitForMessages;
             thread1 = new Thread(s);
             thread1.Start();

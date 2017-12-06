@@ -16,6 +16,8 @@ namespace UDPClient
         public Form1 form;
         public string serverIP;
         public bool running;
+        public int lastMessage;
+        public string userName;
 
         public void WaitForMessages()
         {
@@ -29,7 +31,8 @@ namespace UDPClient
                 //Whenever we get a new connection we want to try to receive bytes
                 //IPEndPoint udpServer = new IPEndPoint(IPAddress.Any, 0);
                 IPEndPoint udpServer = new IPEndPoint(IPAddress.Parse(serverIP), 8080);
-                socket.SendTo(Encoding.ASCII.GetBytes("Test"), udpServer);
+                string message = $"send:{lastMessage}:{userName}";
+                socket.SendTo(Encoding.ASCII.GetBytes(message), udpServer);
                 var port = socket.LocalEndPoint.ToString().Split(':')[1];
 
                 try

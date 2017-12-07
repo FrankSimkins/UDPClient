@@ -16,8 +16,9 @@ namespace UDPClient
         public Form1 form;
         public string serverIP;
         public bool running;
-        public int lastMessage;
+        public int lastMessage = 0;
         public string userName;
+        public string prevMessage;
 
         public void WaitForMessages()
         {
@@ -26,12 +27,12 @@ namespace UDPClient
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
             running = true;
-            while (running)
+            while (true)
             {
                 //Whenever we get a new connection we want to try to receive bytes
                 //IPEndPoint udpServer = new IPEndPoint(IPAddress.Any, 0);
                 IPEndPoint udpServer = new IPEndPoint(IPAddress.Parse(serverIP), 8080);
-                string message = $"send:{lastMessage}:{userName}";
+                string message = $"send:{lastMessage}:{userName}: ";
                 socket.SendTo(Encoding.ASCII.GetBytes(message), udpServer);
                 var port = socket.LocalEndPoint.ToString().Split(':')[1];
 
@@ -44,12 +45,21 @@ namespace UDPClient
                     IPEndPoint groupEP = new IPEndPoint(IPAddress.Any, int.Parse(port));
                     byte[] buffer = new byte[1024];
                     socket.Receive(buffer);
+                    string buff = Encoding.ASCII.GetString(buffer);
+                    string lmessage = buff.Split(':')[0];
+                    int lmsg; int.TryParse(lmessage, out lmsg);
 
-                    form.UpdateTextbox(Encoding.ASCII.GetString(buffer));
+                    if (lmsg > lastMessage)
+                    {
+                        form.UpdateTextbox("Received" + Encoding.ASCII.GetString(buffer));
+
+                        lastMessage++;
+                    }
+                    
                 }
                 catch (Exception exception)
                 {
-                    Console.WriteLine(exception);
+                    form.UpdateTextbox(exception.ToString());
                 }
 
 

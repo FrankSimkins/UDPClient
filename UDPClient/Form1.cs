@@ -39,7 +39,7 @@ namespace UDPClient
             int portInt = 8080;
 
             IPEndPoint udpServer = new IPEndPoint(serverAddress, portInt);
-
+            //Chatbox1.Items.Add(messageToSend);
             //Try to send the byte array to the server
             try
             {
@@ -81,7 +81,7 @@ namespace UDPClient
                 IPEndPoint udpServer = new IPEndPoint(serverAddress, portInt);
                 byte[] byteMessage = Encoding.ASCII.GetBytes($"{userName}:");
 
-                socket.SendTo(Encoding.ASCII.GetBytes($"connect:0:{userName}"), udpServer);
+                socket.SendTo(Encoding.ASCII.GetBytes($"connect:0:{userName}: "), udpServer);
                 var portVar = socket.LocalEndPoint.ToString().Split(':')[1];
 
                 try
@@ -119,7 +119,7 @@ namespace UDPClient
             //AwaitMessages messageThread = new AwaitMessages();
             messageThread.form = form2;
             messageThread.serverIP = addressTextbox.Text;
-            messageThread.lastMessage = lastMessage;
+            //messageThread.lastMessage = lastMessage;
             messageThread.userName = UserNameTextbox.Text;
             ThreadStart s = messageThread.WaitForMessages;
             thread1 = new Thread(s);

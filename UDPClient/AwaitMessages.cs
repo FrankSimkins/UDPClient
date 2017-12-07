@@ -18,19 +18,14 @@ namespace UDPClient
         public bool running;
         public int lastMessage = 0;
         public string userName;
-        public string prevMessage;
 
         public void WaitForMessages()
         {
-            //Declare udp client variable on port 8085
-            UdpClient udpClient = new UdpClient();
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
             running = true;
             while (true)
             {
-                //Whenever we get a new connection we want to try to receive bytes
-                //IPEndPoint udpServer = new IPEndPoint(IPAddress.Any, 0);
                 IPEndPoint udpServer = new IPEndPoint(IPAddress.Parse(serverIP), 8080);
                 string message = $"send:{lastMessage}:{userName}: ";
                 socket.SendTo(Encoding.ASCII.GetBytes(message), udpServer);
@@ -39,8 +34,6 @@ namespace UDPClient
                 try
                 {
                     //Once we receive bytes we want to change them to a string and print them in our chatbox.
-                    //byte[] receivedBytes = udpClient.Receive(ref udpServer);
-                    //string returnData = Encoding.ASCII.GetString(receivedBytes);
 
                     IPEndPoint groupEP = new IPEndPoint(IPAddress.Any, int.Parse(port));
                     byte[] buffer = new byte[1024];
@@ -51,8 +44,9 @@ namespace UDPClient
 
                     if (lmsg > lastMessage)
                     {
-                        form.UpdateTextbox("Received" + Encoding.ASCII.GetString(buffer));
-
+                        string userName = buff.Split(':')[1];
+                        string stringMessage = buff.Split(':')[2];
+                        form.UpdateTextbox(userName + ": " + stringMessage);
                         lastMessage++;
                     }
                     

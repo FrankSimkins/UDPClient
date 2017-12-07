@@ -20,7 +20,6 @@ namespace UDPClient
         static UdpClient udpClient = new UdpClient();
         public static Form1 form2;
         static IPAddress serverAddress;
-        static IPEndPoint udpServer;
         static AwaitMessages messageThread = new AwaitMessages();
         static Thread thread1;
         static int lastMessage;
@@ -28,7 +27,6 @@ namespace UDPClient
         public Form1()
         {
             InitializeComponent();
-            //AwaitingMessage(udpClient);
         }
 
         private void SendButton_Click(object sender, EventArgs e)
@@ -39,7 +37,7 @@ namespace UDPClient
             int portInt = 8080;
 
             IPEndPoint udpServer = new IPEndPoint(serverAddress, portInt);
-            //Chatbox1.Items.Add(messageToSend);
+
             //Try to send the byte array to the server
             try
             {
@@ -93,7 +91,8 @@ namespace UDPClient
                     socket.Receive(buffer);
 
                     string receivedBytes = Encoding.ASCII.GetString(buffer);
-                    int.TryParse(receivedBytes, out lastMessage);
+                    string lmessage = receivedBytes.Split(':')[0];
+                    int.TryParse(lmessage, out lastMessage);
 
                     messageThread.running = true;
 
@@ -116,10 +115,9 @@ namespace UDPClient
         {
             //Here we create a second thread so we can wait for messages and also still be able to send new messages.
             form2 = this;
-            //AwaitMessages messageThread = new AwaitMessages();
             messageThread.form = form2;
             messageThread.serverIP = addressTextbox.Text;
-            //messageThread.lastMessage = lastMessage;
+            messageThread.lastMessage = lastMessage;
             messageThread.userName = UserNameTextbox.Text;
             ThreadStart s = messageThread.WaitForMessages;
             thread1 = new Thread(s);

@@ -31,7 +31,7 @@ namespace UDPClient
 
         private void SendButton_Click(object sender, EventArgs e)
         {
-            //When the send button is clicked, check what we ant to send and change convert it to a byte array
+            //When the send button is clicked, get string, convert to bytes, then send to server.
             string messageToSend = $"receive:0:{UserNameTextbox.Text}:{MessageTextbox.Text}";
             byte[] byteMessage = Encoding.ASCII.GetBytes(messageToSend);
             int portInt = 8080;
@@ -84,7 +84,6 @@ namespace UDPClient
 
                 try
                 {
-                    //udpClient.Send(byteMessage, byteMessage.Length, udpServer);
 
                     IPEndPoint groupEP = new IPEndPoint(IPAddress.Any, int.Parse(port));
                     byte[] buffer = new byte[1024];
@@ -94,7 +93,8 @@ namespace UDPClient
                     string lmessage = receivedBytes.Split(':')[0];
                     int.TryParse(lmessage, out lastMessage);
 
-                    messageThread.running = true;
+
+                    HideForms();
 
                 }
                 catch (Exception exception)
@@ -113,7 +113,7 @@ namespace UDPClient
 
         private void AwaitingMessage(UdpClient udpClient)
         {
-            //Here we create a second thread so we can wait for messages and also still be able to send new messages.
+            //Here we create a second thread, and send variable info to it.
             form2 = this;
             messageThread.form = form2;
             messageThread.serverIP = addressTextbox.Text;
@@ -143,7 +143,8 @@ namespace UDPClient
         private void DisconnectButton_Click(object sender, EventArgs e)
         {
             thread1.Abort();
-            messageThread.running = false;
+
+            ShowForms();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -154,7 +155,6 @@ namespace UDPClient
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             thread1.Abort();
-            messageThread.running = false;
             Application.ExitThread();
             Environment.Exit(0);
         }
@@ -162,9 +162,42 @@ namespace UDPClient
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             thread1.Abort();
-            messageThread.running = false;
             Application.ExitThread();
             Environment.Exit(0);
+        }
+
+        private void HideForms()
+        {
+            DisconnectButton.Visible = true;
+            Chatbox1.Visible = true;
+            MessageTextbox.Visible = true;
+            SendButton.Visible = true;
+
+            ConnectButton.Visible = false;
+            label1.Visible = false;
+            label2.Visible = false;
+            label4.Visible = false;
+            StatusLabel.Visible = false;
+            UserNameTextbox.Visible = false;
+            addressTextbox.Visible = false;
+            PortTextbox.Visible = false;
+        }
+
+        private void ShowForms()
+        {
+            DisconnectButton.Visible = false;
+            Chatbox1.Visible = false;
+            MessageTextbox.Visible = false;
+            SendButton.Visible = false;
+
+            ConnectButton.Visible = true;
+            label1.Visible = true;
+            label2.Visible = true;
+            label4.Visible = true;
+            StatusLabel.Visible = true;
+            UserNameTextbox.Visible = true;
+            addressTextbox.Visible = true;
+            PortTextbox.Visible = true;
         }
     }
 }

@@ -65,6 +65,7 @@
             this.MessageTextbox.Name = "MessageTextbox";
             this.MessageTextbox.Size = new System.Drawing.Size(346, 20);
             this.MessageTextbox.TabIndex = 2;
+            this.MessageTextbox.Visible = false;
             // 
             // SendButton
             // 
@@ -74,6 +75,7 @@
             this.SendButton.TabIndex = 3;
             this.SendButton.Text = "Send";
             this.SendButton.UseVisualStyleBackColor = true;
+            this.SendButton.Visible = false;
             this.SendButton.Click += new System.EventHandler(this.SendButton_Click);
             // 
             // Chatbox1
@@ -83,6 +85,7 @@
             this.Chatbox1.Name = "Chatbox1";
             this.Chatbox1.Size = new System.Drawing.Size(346, 290);
             this.Chatbox1.TabIndex = 4;
+            this.Chatbox1.Visible = false;
             // 
             // addressTextbox
             // 
@@ -143,6 +146,7 @@
             this.DisconnectButton.TabIndex = 11;
             this.DisconnectButton.Text = "Disconnect";
             this.DisconnectButton.UseVisualStyleBackColor = true;
+            this.DisconnectButton.Visible = false;
             this.DisconnectButton.Click += new System.EventHandler(this.DisconnectButton_Click);
             // 
             // StatusLabel
@@ -158,7 +162,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(465, 453);
+            this.ClientSize = new System.Drawing.Size(467, 453);
             this.Controls.Add(this.StatusLabel);
             this.Controls.Add(this.DisconnectButton);
             this.Controls.Add(this.label4);
